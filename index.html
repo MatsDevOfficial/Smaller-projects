@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Minimum cijfer bereken Tool</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>📊 Cijfer Bereken Tool</h2>
+
+  <div id="cijfers"></div>
+
+  <button onclick="voegCijferToe()">➕ Cijfer toevoegen</button>
+
+  <h3>Instellingen:</h3>
+  <div class="instellingen">
+    Gewenst gemiddelde: <input type="number" id="gewenst" value="5.5" step="0.1">
+    Weging nieuwe toets: <input type="number" id="wegingNieuw" value="1">
+  </div>
+
+  <button onclick="bereken()">📊 Bereken minimum cijfer</button>
+
+  <h3>Resultaat:</h3>
+  <div id="resultaat">Voer je cijfers en instellingen in en klik op 'Bereken'!</div>
+
+  <div class="footer">
+    Gemaakt door Mats. Heb je bugs gevonden, report ze via: https://github.com/MatsDevOfficial/Smaller-projects/issues
+
+  <script>
+    function voegCijferToe() {
+      let div = document.createElement("div");
+      div.className = "cijfer-veld";
+      div.innerHTML = 'Cijfer: <input type="number" step="0.1" class="cijfer"> Weging: <input type="number" class="weging">';
+      document.getElementById("cijfers").appendChild(div);
+    }
+
+    function bereken() {
+      let cijfers = document.querySelectorAll(".cijfer");
+      let wegingen = document.querySelectorAll(".weging");
+
+      let totaalPunten = 0;
+      let totaalWeging = 0;
+
+      for (let i = 0; i < cijfers.length; i++) {
+        let cijfer = parseFloat(cijfers[i].value);
+        let weging = parseFloat(wegingen[i].value);
+        if (!isNaN(cijfer) && !isNaN(weging)) {
+          totaalPunten += cijfer * weging;
+          totaalWeging += weging;
+        }
+      }
+
+      let gewenstGemiddelde = parseFloat(document.getElementById("gewenst").value);
+      let wegingNieuw = parseFloat(document.getElementById("wegingNieuw").value);
+
+      let minimaalCijfer = ((gewenstGemiddelde * (totaalWeging + wegingNieuw)) - totaalPunten) / wegingNieuw;
+
+      minimaalCijfer = Math.round(minimaalCijfer * 100) / 100;
+
+      let resultaatDiv = document.getElementById("resultaat");
+
+      if (minimaalCijfer > 10) {
+        resultaatDiv.innerHTML = `Zelfs met een 10 haal je het gewenste gemiddelde niet 😅`;
+      } else if (minimaalCijfer < 1) {
+        resultaatDiv.innerHTML = `Je hebt het gewenste gemiddelde al gehaald! 🎉`;
+      } else {
+        resultaatDiv.innerHTML = `Je moet minimaal een <strong>${minimaalCijfer}</strong> halen.`;
+      }
+    }
+
+    // Voeg standaard 5 velden toe
+    for (let i = 0; i < 5; i++) voegCijferToe();
+  </script>
+</body>
+</html>
